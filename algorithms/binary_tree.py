@@ -32,10 +32,10 @@ class BinaryTree:
 
         self.node.add(value=value, payload=payload)
 
-    def traverse(self, level: int = 0) -> Iterable[Tuple[int, BaseNode]]:
+    def traverse(self) -> Iterable[Tuple[int, BaseNode]]:
         if not self.node:
             return
-        yield from self.node.traverse(level=level)
+        yield from self.node.traverse()
 
     def __iter__(self):
         if not self.node:
@@ -89,6 +89,7 @@ class BaseNode:
         node_to_add = self.find_node_to_add(value=value)
 
         if node_to_add.position == Position.EQUAL:
+            # same value => overwrite payload
             node_to_add.node.payload = payload
             return
 
@@ -97,18 +98,22 @@ class BaseNode:
         )
 
         if node_to_add.position == Position.LESS:
+            # value is less => assign as left node
             node_to_add.node.left = node
         elif node_to_add.position == Position.GREATER:
+            # value is greater => assign as right node
             node_to_add.node.right = node
         else:
             raise ValueError(node_to_add.position)
 
-    def traverse(self, level: int = 0) -> Iterable[Tuple[int, BaseNode]]:
+    def traverse(self) -> Iterable[Tuple[int, BaseNode]]:
         if self.left:
-            yield from self.left.traverse(level=level + 1)
-        yield level, self
+            for level_, node in self.left.traverse():
+                yield level_ + 1, node
+        yield 0, self
         if self.right:
-            yield from self.right.traverse(level=level + 1)
+            for level_, node in self.right.traverse():
+                yield level_ + 1, node
 
     def __iter__(self):
         if self.left:
@@ -152,6 +157,7 @@ class TestBinaryTree:
             print("{!r}:{!r}".format(node.value, node.payload))
 
         assert len(tree) == 9
+        # assert False
 
 
 if __name__ == "__main__":
