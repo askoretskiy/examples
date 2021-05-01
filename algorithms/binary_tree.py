@@ -157,6 +157,9 @@ class Node(BaseNode):
     parent: BaseNode
 
 
+# TODO: Implement EmptyRootNode and extract all logic of BinaryTree there
+
+
 class TestBinaryTree:
     @pytest.fixture
     def tree(self):
