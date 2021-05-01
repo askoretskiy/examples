@@ -16,12 +16,12 @@ class AbstractCounter(ABC):
 
 
 class FakeCounter(AbstractCounter):
-    @classmethod
-    def increase(cls, name: str):
+    @staticmethod
+    def increase(name: str):
         pass
 
-    @classmethod
-    def finish(cls, msg: str = ""):
+    @staticmethod
+    def finish(msg: str = ""):
         pass
 
 
