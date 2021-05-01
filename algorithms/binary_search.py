@@ -20,7 +20,6 @@ def find_binary(
 ) -> Optional[int]:
     left = 0
     right = len(data) - 1
-    step = 1
 
     while left <= right:
         index = (left + right) // 2
@@ -35,7 +34,6 @@ def find_binary(
         else:
             counter.increase(f"[{left}..{right}] {center}@{index} > {value}")
             left = index + 1  # exclude left
-        step += 1
 
     counter.finish("Not found")
 
