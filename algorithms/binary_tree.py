@@ -47,6 +47,11 @@ class BinaryTree:
             return 0
         return len(self.node)
 
+    def iter_wide(self):
+        if not self.node:
+            return
+        yield from self.node.iter_wide()
+
 
 class Position(Enum):
     LESS = 1
@@ -122,6 +127,22 @@ class BaseNode:
         if self.right:
             yield from self.right
 
+    def iter_wide(self):
+        current_nodes = [self]
+        next_nodes = []
+
+        while current_nodes:
+            for node in current_nodes:
+                yield node
+                if node.left:
+                    next_nodes.append(node.left)
+                if node.right:
+                    next_nodes.append(node.right)
+            if not next_nodes:
+                return
+            current_nodes = next_nodes
+            next_nodes = []
+
     def __len__(self):
         return sum(1 for _node in self)
 
@@ -151,9 +172,14 @@ class TestBinaryTree:
 
     def test_add(self, tree):
         for level, node in tree.traverse():
-            print("{} {!r}:{!r}".format(" " * (level * 4), node.value, node.payload))
+            print("{}{!r}:{!r}".format(" " * (level * 4), node.value, node.payload))
 
+        print("iter")
         for node in tree:
+            print("{!r}:{!r}".format(node.value, node.payload))
+
+        print("iter_wide")
+        for node in tree.iter_wide():
             print("{!r}:{!r}".format(node.value, node.payload))
 
         assert len(tree) == 9
