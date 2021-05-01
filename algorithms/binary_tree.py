@@ -188,6 +188,11 @@ class TestBinaryTree:
         assert len(tree) == 9
         # assert False
 
+    def test_empty(self):
+        tree = BinaryTree()
+        # TODO: Test all methods
+        pass
+
 
 if __name__ == "__main__":
     main()
