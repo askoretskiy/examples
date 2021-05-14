@@ -29,9 +29,13 @@ Execute the module you prefer:
       python -m algorithms.binary_tree test
       python -m algorithms.binary_tree <LENGTH> <WIDTH>
 
-* Recursive sum:
+* Recursive count:
 
-      python3.9 -m algorithms.recursive_sum
+      python3.9 -m algorithms.recursive_count
+
+* Recursive max:
+
+      python3.9 -m algorithms.recursive_max
 
 ## Contributing
 
