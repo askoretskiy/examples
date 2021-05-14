@@ -16,13 +16,18 @@ Install dev depencencies:
 
 Execute the module you prefer:
 
-* Binary search
+* Binary search:
 
       python -m algorithms.binary_search
 
-* Binary tree
+* Binary tree:
 
       python -m algorithms.binary_tree
+
+* Find the biggest box:
+
+      python -m algorithms.binary_tree test
+      python -m algorithms.binary_tree <LENGTH> <WIDTH>
 
 ## Contributing
 
