@@ -28,6 +28,6 @@ if __name__ == "__main__":
     else:
         file_path = Path(sys.argv[0]).name
         print(
-            f"Usage: {file_path} test OR {file_path} <LENGTH> <HEIGHT>", file=sys.stderr
+            f"Usage: {file_path} test OR {file_path} *<VALUE>", file=sys.stderr
         )
         exit(1)
