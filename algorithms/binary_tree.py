@@ -146,6 +146,7 @@ class BaseNode:
     def __len__(self):
         return sum(1 for _node in self)
 
+    # TODO: Add `delete` method
 
 @dataclasses.dataclass
 class RootNode(BaseNode):
