@@ -34,5 +34,7 @@ if __name__ == "__main__":
         print(f"For box {x}x{y} biggest box is {a}x{a}: {x//a}x{y//a}")
     else:
         file_path = Path(sys.argv[0]).name
-        print(f"Usage: {file_path} test OR {file_path} <LENGTH> <HEIGHT>", file=sys.stderr)
+        print(
+            f"Usage: {file_path} test OR {file_path} <LENGTH> <HEIGHT>", file=sys.stderr
+        )
         exit(1)

@@ -148,6 +148,7 @@ class BaseNode:
 
     # TODO: Add `delete` method
 
+
 @dataclasses.dataclass
 class RootNode(BaseNode):
     parent: None = None
