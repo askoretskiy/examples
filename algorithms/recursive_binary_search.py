@@ -25,25 +25,21 @@ def recursive_get_index_binary(data: Sequence[T], value: T) -> Optional[int]:
     counter = var_counter.get()
     counter.increase("")
 
-    if len(data) == 1:
-        if data[0] == value:
-            counter.finish()
-            return 0
-        else:
-            counter.finish("Not found")
-            return None
+    if not data:
+        return None
 
     index = len(data) // 2
-    left = data[:index]
-    right = data[index:]
+    center = data[index]
 
-    if right[0] <= value:
-        offset = recursive_get_index_binary(right, value)
-        if offset is None:
-            return None
-        return index + offset
-    else:
-        return recursive_get_index_binary(left, value)
+    if center == value:
+        return index
+    elif value < center:
+        return recursive_get_index_binary(data[:index], value)
+
+    offset = recursive_get_index_binary(data[index+1:], value)
+    if offset is None:
+        return None
+    return index + offset + 1
 
 
 class TestFindBinary:
@@ -61,27 +57,27 @@ class TestFindBinary:
             index = recursive_get_index_binary(data=range_1000, value=value)
         assert index is not None
         assert index == value - 1000
-        assert 1 <= counter.value <= 11
+        assert 1 <= counter.value <= 10
 
     def test_before(self, range_1000):
         with get_counter(var_counter, recursive_get_index_binary) as counter:
             value = -1
             index = recursive_get_index_binary(data=range_1000, value=value)
         assert index is None
-        assert counter.value == 10
+        assert counter.value == 11
 
     def test_after(self, range_1000):
         with get_counter(var_counter, recursive_get_index_binary) as counter:
             value = 2000
             index = recursive_get_index_binary(data=range_1000, value=value)
         assert index is None
-        assert counter.value == 11
+        assert counter.value == 10
 
     def test_complexity_range_1000(self, range_1000):
         with get_counter(var_counter, recursive_get_index_binary) as counter:
             for value in range_1000:
                 recursive_get_index_binary(data=range_1000, value=value)
-        assert counter.value == 10976
+        assert counter.value == 8987
 
     def test_without_counter(self, range_1000):
         index = recursive_get_index_binary(data=range_1000, value=1500)
