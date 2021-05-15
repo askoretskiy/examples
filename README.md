@@ -37,6 +37,10 @@ Execute the module you prefer:
 
       python3.9 -m algorithms.recursive_max
 
+* Recursive binary search:
+
+      python3.9 -m algorithms.recursive_binary_search
+
 ## Contributing
 
 Format:
