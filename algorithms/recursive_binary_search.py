@@ -36,7 +36,7 @@ def recursive_get_index_binary(data: Sequence[T], value: T) -> Optional[int]:
     elif value < center:
         return recursive_get_index_binary(data[:index], value)
 
-    offset = recursive_get_index_binary(data[index+1:], value)
+    offset = recursive_get_index_binary(data[index + 1 :], value)
     if offset is None:
         return None
     return index + offset + 1
