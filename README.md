@@ -41,6 +41,10 @@ Execute the module you prefer:
 
       python3.9 -m algorithms.recursive_binary_search
 
+* Quicksort:
+
+      python3.9 -m algorithms.quicksort
+
 ## Contributing
 
 Format:
