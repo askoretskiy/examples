@@ -3,6 +3,8 @@ import contextlib
 import dataclasses
 import logging
 from abc import ABC
+from contextvars import ContextVar
+from typing import Callable
 
 
 class AbstractCounter(ABC):
@@ -29,9 +31,9 @@ class FakeCounter(AbstractCounter):
 class Counter(AbstractCounter):
     value: int
 
-    def __init__(self, name: str):
+    def __init__(self, logger: logging.Logger):
         self.value = 0
-        self.logger = logging.getLogger(name)
+        self.logger = logger
 
     def increase(self, msg: str):
         self.value += 1
@@ -45,6 +47,10 @@ class Counter(AbstractCounter):
 
 
 @contextlib.contextmanager
-def get_counter(fn):
-    counter = Counter(name="{}.{}".format(fn.__module__, fn.__name__))
+def get_counter(variable: ContextVar, fn: Callable):
+    logger = logging.getLogger(fn.__module__).getChild(fn.__name__)
+    logger.setLevel(logging.DEBUG)
+    counter = Counter(logger=logger)
+    token = variable.set(counter)
     yield counter
+    variable.reset(token)

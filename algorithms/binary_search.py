@@ -3,11 +3,14 @@
 
 import logging
 import sys
+from contextvars import ContextVar
 from typing import Optional, Sequence, TypeVar
 
 import pytest
 
 from algorithms.counter import AbstractCounter, FakeCounter, get_counter
+
+var_counter: ContextVar[AbstractCounter] = ContextVar("counter", default=FakeCounter)
 
 
 def main():
@@ -18,9 +21,8 @@ def main():
 T = TypeVar("T")
 
 
-def get_index_binary(
-    data: Sequence[T], value: T, counter: AbstractCounter = FakeCounter
-) -> Optional[int]:
+def get_index_binary(data: Sequence[T], value: T) -> Optional[int]:
+    counter = var_counter.get()
     left = 0
     right = len(data) - 1
 
@@ -52,31 +54,31 @@ class TestFindBinary:
 
     @pytest.mark.parametrize("value", range(1000, 2000))
     def test_range(self, range_1000, value: int):
-        with get_counter(get_index_binary) as counter:
-            index = get_index_binary(data=range_1000, value=value, counter=counter)
-            assert index is not None
-            assert index == value - 1000
-            assert 1 <= counter.value <= 10
+        with get_counter(var_counter, get_index_binary) as counter:
+            index = get_index_binary(data=range_1000, value=value)
+        assert index is not None
+        assert index == value - 1000
+        assert 1 <= counter.value <= 10
 
     def test_before(self, range_1000):
-        value = -1
-        with get_counter(get_index_binary) as counter:
-            index = get_index_binary(data=range_1000, value=value, counter=counter)
-            assert index is None
-            assert counter.value == 9
+        with get_counter(var_counter, get_index_binary) as counter:
+            value = -1
+            index = get_index_binary(data=range_1000, value=value)
+        assert index is None
+        assert counter.value == 9
 
     def test_after(self, range_1000):
-        value = 2000
-        with get_counter(get_index_binary) as counter:
-            index = get_index_binary(data=range_1000, value=value, counter=counter)
-            assert index is None
-            assert counter.value == 10
+        with get_counter(var_counter, get_index_binary) as counter:
+            value = 2000
+            index = get_index_binary(data=range_1000, value=value)
+        assert index is None
+        assert counter.value == 10
 
     def test_complexity_range_1000(self, range_1000):
-        with get_counter(get_index_binary) as counter:
+        with get_counter(var_counter, get_index_binary) as counter:
             for value in range_1000:
-                get_index_binary(data=range_1000, value=value, counter=counter)
-            assert counter.value == 8987
+                get_index_binary(data=range_1000, value=value)
+        assert counter.value == 8987
 
     def test_without_counter(self, range_1000):
         index = get_index_binary(data=range_1000, value=1500)
