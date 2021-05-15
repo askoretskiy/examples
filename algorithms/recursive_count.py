@@ -2,7 +2,7 @@
 #   python3.9 -m algorithms.recursive_count
 import sys
 from pathlib import Path
-from typing import Sequence, Any
+from typing import Any, Sequence
 
 import pytest as pytest
 
@@ -26,7 +26,5 @@ if __name__ == "__main__":
         print(f"For values {' '.join(sys.argv[1:])} count is {result}")
     else:
         file_path = Path(sys.argv[0]).name
-        print(
-            f"Usage: {file_path} test OR {file_path} *<VALUE>", file=sys.stderr
-        )
+        print(f"Usage: {file_path} test OR {file_path} *<VALUE>", file=sys.stderr)
         exit(1)

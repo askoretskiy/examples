@@ -27,7 +27,5 @@ if __name__ == "__main__":
         print(f"For values {' '.join(sys.argv[1:])} sum is {result}")
     else:
         file_path = Path(sys.argv[0]).name
-        print(
-            f"Usage: {file_path} test OR {file_path} *<VALUE>", file=sys.stderr
-        )
+        print(f"Usage: {file_path} test OR {file_path} *<VALUE>", file=sys.stderr)
         exit(1)
