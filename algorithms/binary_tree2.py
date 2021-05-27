@@ -106,6 +106,11 @@ def fill_values(tree: BinaryTree, values: Sequence[T]):
     middle = (len(values) - 1) // 2
     tree.insert(values[middle])
 
+    if len(values) > 3:
+        fill_values(tree, values[:middle])
+        fill_values(tree, values[middle + 1 :])
+        return
+
     for i in range(1, middle + 1):
         tree.insert(values[middle - i])
         tree.insert(values[middle + i])
@@ -117,8 +122,12 @@ def fill_values(tree: BinaryTree, values: Sequence[T]):
 def main():
     tree = BinaryTree()
 
-    values = list(range(0, 100, 3))
+    values = list(range(0, 63))
 
+    # for value in values:
+    #     tree.insert(value)
+
+    # insert already balanced tree
     fill_values(tree, values)
 
     print(tree)
@@ -127,11 +136,12 @@ def main():
     for node in tree.traverse_wide():
         print("{}[{}]".format(" " * node.depth * 2, node.value))
 
-    value = 9
-    print("Search {}".format(value))
-    node = tree.find(value)
-    print(node)
+    value = values[0]
+    print("Search {}: {}".format(value, tree.find(value)))
+    print("{} in tree: {}".format(value, value in tree))
 
+    value = values[-1]
+    print("Search {}: {}".format(value, tree.find(value)))
     print("{} in tree: {}".format(value, value in tree))
 
 
