@@ -60,7 +60,13 @@ class Node:
 
     @property
     def depth(self) -> int:
-        return 1 + self.parent.depth
+        node = self
+        depth = 0
+
+        while node := node.parent:
+            depth += 1
+
+        return depth
 
     def __contains__(self, value: T):
         return bool(self.find(value))
