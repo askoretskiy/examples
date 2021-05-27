@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import dataclasses
-import random
 from collections import deque
-from typing import Iterator, Optional, TypeVar
+from typing import Iterator, Optional, Sequence, TypeVar
 
 T = TypeVar("T")
 
 
-@dataclasses.dataclass(init=False)
+@dataclasses.dataclass(init=False, repr=False)
 class Node:
     parent: Node
     value: T
@@ -19,6 +18,9 @@ class Node:
         self.value = value
         self.parent = parent
         self.left = self.right = None
+
+    def __repr__(self):
+        return f"<Node: {self.value} depth={self.depth}>"
 
     def insert(self, value: T):
         if value < self.value:
@@ -58,8 +60,25 @@ class Node:
     def depth(self) -> int:
         return 1 + self.parent.depth
 
+    def __contains__(self, value: T):
+        return bool(self.find(value))
 
-@dataclasses.dataclass(init=False)
+    def find(self, value: T) -> Optional[Node]:
+        if value == self.value:
+            return self
+        elif value < self.value:
+            # look left
+            if not self.left:
+                return None
+            return self.left.find(value)
+        elif self.value < value:
+            # look right
+            if not self.right:
+                return None
+            return self.right.find(value)
+
+
+@dataclasses.dataclass(init=False, repr=False)
 class BinaryTree(Node):
     parent = None
     value: Optional[T]
@@ -76,16 +95,14 @@ class BinaryTree(Node):
         else:
             super().insert(value)
 
+    def __repr__(self):
+        return "\n".join(
+            "{}[{}]".format(" " * node.depth * 2, node.value)
+            for node in self.traverse_deep()
+        )
 
-def main():
-    tree = BinaryTree()
 
-    values = list(range(0, 100, 3))
-
-    # random.shuffle(values)
-    # for value in values:
-    #     tree.insert(value)
-
+def fill_values(tree: BinaryTree, values: Sequence[T]):
     middle = (len(values) - 1) // 2
     tree.insert(values[middle])
 
@@ -96,13 +113,26 @@ def main():
     for i in range(middle * 2 + 1, len(values)):
         tree.insert(values[i])
 
-    print("Deep")
-    for node in tree.traverse_deep():
-        print("{}{:02}".format(" " * node.depth * 2, node.value))
 
-    print("Wide")
+def main():
+    tree = BinaryTree()
+
+    values = list(range(0, 100, 3))
+
+    fill_values(tree, values)
+
+    print(tree)
+
+    print("Wide:")
     for node in tree.traverse_wide():
-        print("{}{:02}".format(" " * node.depth * 2, node.value))
+        print("{}[{}]".format(" " * node.depth * 2, node.value))
+
+    value = 9
+    print("Search {}".format(value))
+    node = tree.find(value)
+    print(node)
+
+    print("{} in tree: {}".format(value, value in tree))
 
 
 if __name__ == "__main__":
