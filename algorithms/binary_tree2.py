@@ -25,25 +25,25 @@ class Node:
     def insert(self, value: T):
         if value < self.value:
             # add to the left
-            if self.left:
-                self.left.insert(value)
+            if child := self.left:
+                child.insert(value)
             else:
                 self.left = Node(value=value, parent=self)
         elif self.value < value:
             # add to the right
-            if self.right:
-                self.right.insert(value)
+            if child := self.right:
+                child.insert(value)
             else:
                 self.right = Node(value=value, parent=self)
         else:
             raise ValueError("Duplicate value: {!r}".format(value))
 
     def traverse_deep(self) -> Iterator[Node]:
-        if self.left:
-            yield from self.left.traverse_deep()
+        if child := self.left:
+            yield from child.traverse_deep()
         yield self
-        if self.right:
-            yield from self.right.traverse_deep()
+        if child := self.right:
+            yield from child.traverse_deep()
 
     def traverse_wide(self) -> Iterator[Node]:
         nodes = deque([self])
@@ -51,10 +51,12 @@ class Node:
         while nodes:
             node = nodes.popleft()
             yield node
-            if node.left:
-                nodes.append(node.left)
-            if node.right:
-                nodes.append(node.right)
+
+            if child := node.left:
+                nodes.append(child)
+
+            if child := node.right:
+                nodes.append(child)
 
     @property
     def depth(self) -> int:
@@ -68,14 +70,14 @@ class Node:
             return self
         elif value < self.value:
             # look left
-            if not self.left:
-                return None
-            return self.left.find(value)
+            if child := self.left:
+                return child.find(value)
+            return None
         elif self.value < value:
             # look right
-            if not self.right:
-                return None
-            return self.right.find(value)
+            if child := self.right:
+                return child.find(value)
+            return None
 
 
 @dataclasses.dataclass(init=False, repr=False)
