@@ -85,6 +85,13 @@ class Node:
                 return child.find(value)
             return None
 
+    def delete(self, value: T):
+        node = self.find(value)
+        if not node:
+            return
+
+        raise NotImplementedError()
+
 
 @dataclasses.dataclass(init=False, repr=False)
 class BinaryTree(Node):
@@ -151,6 +158,8 @@ def main():
     value = values[-1]
     print("Search {}: {}".format(value, tree.find(value)))
     print("{} in tree: {}".format(value, value in tree))
+
+    tree.delete(10)
 
 
 if __name__ == "__main__":
