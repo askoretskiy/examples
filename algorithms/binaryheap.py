@@ -12,8 +12,10 @@ T = TypeVar("T")
 class MaxBinaryHeap:
     items: List[T]
 
-    def __init__(self):
+    def __init__(self, *args: T):
         self.items = []
+        for value in args:
+            self.append(value)
 
     @staticmethod
     def get_parent_index(index: int) -> int:
@@ -34,9 +36,9 @@ class MaxBinaryHeap:
 
     def append(self, value: T):
         self.items.append(value)
-        item_index = len(self.items) - 1
-        while item_index:
-            parent_index = self.get_parent_index(item_index)
+        child_index = len(self.items) - 1
+        while child_index:
+            parent_index = self.get_parent_index(child_index)
             parent_value = self.items[parent_index]
             if value == parent_value:
                 raise ValueError
@@ -44,42 +46,105 @@ class MaxBinaryHeap:
                 # all good -> nothing to do
                 return
             # parent_value < value -> swap them
-            self.items[item_index], self.items[parent_index] = (
+            self.items[child_index], self.items[parent_index] = (
                 self.items[parent_index],
-                self.items[item_index],
+                self.items[child_index],
             )
-            item_index = parent_index
+            child_index = parent_index
+
+    def pop_max(self) -> T:
+        if len(self.items) == 1:
+            return self.items.pop()
+
+        max_value = self.get_max()
+        value = self.items.pop()
+        self.items[0] = value
+        parent_index = 0
+        max_index = len(self.items) - 1
+
+        while True:
+            left_child_index = self.get_left_child_index(parent_index)
+            right_child_index = self.get_right_child_index(parent_index)
+
+            children_indexes = [left_child_index, right_child_index]
+            children_indexes = [idx for idx in children_indexes if idx <= max_index]
+            children_values = [self.items[i] for i in children_indexes]
+
+            if all(children_value < value for children_value in children_values):
+                break
+
+            if len(children_indexes) == 1:
+                # parent has only one child and it is bigger than it is
+                child_index = children_indexes[0]
+            else:
+                if children_values[0] < children_values[1]:
+                    child_index = children_indexes[1]
+                else:
+                    child_index = children_indexes[0]
+
+            self.items[parent_index], self.items[child_index] = (
+                self.items[child_index],
+                self.items[parent_index],
+            )
+            parent_index = child_index
+
+        return max_value
+
+    def pop_all(self):
+        while self.items:
+            yield self.pop_max()
 
 
 class Test:
-    def test_increase(self):
-        heap = MaxBinaryHeap()
-        for i in range(10):
-            heap.append(i)
-        assert heap.get_max() == 9
+    random_items = [0, 1, 3, 2, 5, 6, 4, 8, 7, 9]
 
-    def test_decrease(self):
-        heap = MaxBinaryHeap()
-        for i in range(9, 0, -1):
-            heap.append(i)
-        assert heap.get_max() == 9
+    @pytest.mark.parametrize("max_value", range(10))
+    def test_max_increase(self, max_value):
+        heap = MaxBinaryHeap(*range(max_value + 1))
+        assert heap.get_max() == max_value
 
-    def test_random(self):
-        heap = MaxBinaryHeap()
-        for i in (1, 3, 2, 5, 4, 7, 8, 6, 9):
-            heap.append(i)
-        assert heap.get_max() == 9
+    @pytest.mark.parametrize("max_value", range(10))
+    def test_max_decrease(self, max_value):
+        heap = MaxBinaryHeap(*range(max_value, -1, -1))
+        assert heap.get_max() == max_value
 
-    def test_empty(self):
-        heap = MaxBinaryHeap()
+    @pytest.mark.parametrize("max_index", range(10))
+    def test_max_random(self, max_index):
+        items = self.random_items[: max_index + 1]
+        heap = MaxBinaryHeap(*items)
+        assert heap.get_max() == max(items)
+        assert 0 <= heap.get_max() <= 9
+
+    def test_max_empty(self):
         with pytest.raises(ValueError):
-            heap.get_max()
+            MaxBinaryHeap().get_max()
 
-    def test_dupe(self):
-        heap = MaxBinaryHeap()
-        heap.append(1)
+    def test_pop_empty(self):
         with pytest.raises(ValueError):
-            heap.append(1)
+            MaxBinaryHeap().pop_max()
+
+    def test_add_dupe(self):
+        with pytest.raises(ValueError):
+            MaxBinaryHeap(1, 1)
+
+    @pytest.mark.parametrize("max_value", range(10))
+    def test_pop_increase(self, max_value):
+        heap = MaxBinaryHeap(*range(max_value + 1))
+        result = list(heap.pop_all())
+        assert result == list(range(max_value, -1, -1))
+
+    @pytest.mark.parametrize("max_value", range(10))
+    def test_pop_decrease(self, max_value):
+        heap = MaxBinaryHeap(*range(max_value, -1, -1))
+        result = list(heap.pop_all())
+        assert result == list(range(max_value, -1, -1))
+
+    @pytest.mark.parametrize("max_index", range(10))
+    def test_pop_random(self, max_index):
+        items = self.random_items[: max_index + 1]
+        heap = MaxBinaryHeap(*items)
+        result = list(heap.pop_all())
+        assert result == sorted(items, reverse=True)
 
 
 if __name__ == "__main__":
