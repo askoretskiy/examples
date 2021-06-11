@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import sys
-from typing import List, TypeVar
+from typing import Iterable, Iterator, List, TypeVar
 
 import pytest
 
@@ -91,9 +91,23 @@ class MaxBinaryHeap:
             )
             index = child_index
 
-    def pop_all(self):
+    def pop_all(self) -> Iterator[T]:
         while self.items:
             yield self.pop_max()
+
+    def insert_pop_max(self, value: T) -> T:
+        if not self.items:
+            # nothing is in the heap -> return value
+            return value
+
+        max_value = self.get_max()
+        if max_value < value:
+            # given value is more than the heap -> return value
+            return value
+
+        self.items[0] = value
+        self.balance_index(index=0, value=value)
+        return max_value
 
 
 class Test:
