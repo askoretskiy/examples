@@ -59,12 +59,15 @@ class MaxBinaryHeap:
         max_value = self.get_max()
         value = self.items.pop()
         self.items[0] = value
-        parent_index = 0
+        self.balance_index(index=0, value=value)
+        return max_value
+
+    def balance_index(self, index: int, value: T):
         max_index = len(self.items) - 1
 
         while True:
-            left_child_index = self.get_left_child_index(parent_index)
-            right_child_index = self.get_right_child_index(parent_index)
+            left_child_index = self.get_left_child_index(index)
+            right_child_index = self.get_right_child_index(index)
 
             children_indexes = [left_child_index, right_child_index]
             children_indexes = [idx for idx in children_indexes if idx <= max_index]
@@ -82,13 +85,11 @@ class MaxBinaryHeap:
                 else:
                     child_index = children_indexes[0]
 
-            self.items[parent_index], self.items[child_index] = (
+            self.items[index], self.items[child_index] = (
                 self.items[child_index],
-                self.items[parent_index],
+                self.items[index],
             )
-            parent_index = child_index
-
-        return max_value
+            index = child_index
 
     def pop_all(self):
         while self.items:
