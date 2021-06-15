@@ -1,5 +1,5 @@
 # run this as:
-#   python3.9 -m algorithms.quicksort
+#   python3.9 -m algorithms.sort_quick
 import random
 import sys
 from pathlib import Path

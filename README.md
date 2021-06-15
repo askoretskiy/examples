@@ -43,7 +43,7 @@ Execute the module you prefer:
 
 * Quicksort:
 
-      python3.9 -m algorithms.quicksort
+      python3.9 -m algorithms.sort_quick
 
 ## Contributing
 
