@@ -161,6 +161,26 @@ class Test:
         result = list(heap.pop_all())
         assert result == sorted(items, reverse=True)
 
+    @pytest.mark.parametrize("max_value", range(2, 10))
+    def test_insert_pop_down_up(self, max_value):
+        """Algorithm for sorting nearly-sorted array (within k elements)"""
+        values = []
+        for i in range(9, -1, -1):
+            values.extend(range(i * max_value, (i + 1) * max_value))
+        first = values[:max_value]
+        assert len(first) == max_value
+        remainder = values[max_value:]
+        heap = MaxBinaryHeap(*first)
+        result = []
+
+        for value in remainder:
+            result.append(heap.insert_pop_max(value))
+
+        for value in heap.pop_all():
+            result.append(value)
+
+        assert result == list(range(10 * max_value - 1, -1, -1))
+
 
 if __name__ == "__main__":
     pytest.main(sys.argv)
