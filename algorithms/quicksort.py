@@ -1,14 +1,16 @@
 # run this as:
 #   python3.9 -m algorithms.quicksort
+import random
 import sys
 from pathlib import Path
-from random import randint
-from typing import Sequence
+from typing import List, TypeVar
 
-import pytest as pytest
+import pytest
+
+T = TypeVar("T")
 
 
-def quicksort(args: Sequence[int]) -> Sequence[int]:
+def quicksort(args: List[T]) -> List[T]:
     """
     >>> quicksort([4, 3, 2, 1])
     [1, 2, 3, 4]
@@ -16,25 +18,43 @@ def quicksort(args: Sequence[int]) -> Sequence[int]:
     [1, 2, 3, 4]
     >>> quicksort([1, 2, 4, 3])
     [1, 2, 3, 4]
+    >>> data = list(range(100))
+    >>> random.shuffle(data)
+    >>> quicksort(data) == list(range(100))
+    True
     """
-    if not args or len(args) == 1:
-        return args
+    quicksort_(args, 0, len(args) - 1)
+    return args
 
-    index = randint(0, len(args) - 1)
-    pivot = args[index]
 
-    less = []
-    greater = []
+def swap(arr: List[T], a: int, b: int):
+    if a == b:
+        return
+    arr[a], arr[b] = arr[b], arr[a]
 
-    for i, v in enumerate(args):
-        if i == index:
-            continue
-        if v <= pivot:
-            less.append(v)
-        else:
-            greater.append(v)
 
-    return [*quicksort(less), pivot, *quicksort(greater)]
+def partition(arr: List[T], low: int, high: int) -> int:
+    next_smaller_index = low - 1  # index of smaller element
+    pivot_index = random.randint(low, high)
+    pivot = arr[pivot_index]
+    swap(arr, pivot_index, high)
+
+    for j in range(low, high + 1):
+        if arr[j] <= pivot:
+            # put it to the next smaller index
+            next_smaller_index += 1
+            swap(arr, j, next_smaller_index)
+
+    # next_smaller_index contains the reference to pivot (the highest element that is <= pivot)
+    return next_smaller_index
+
+
+def quicksort_(array: List[T], begin: int, end: int):
+    if begin >= end:
+        return
+    pivot_index = partition(array, begin, end)
+    quicksort_(array, begin, pivot_index - 1)
+    quicksort_(array, pivot_index + 1, end)
 
 
 if __name__ == "__main__":

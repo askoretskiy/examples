@@ -42,12 +42,14 @@
 
 ## Sort algorithms
 
-* Heap sort
-* Quicksort ???
-* Merge sort ???
-* Bubble sort ???
+* Heap sort (unstable)
+* Quicksort (unstable) ???
+* Merge sort (stable) ???
+* Bubble sort (stable) ???
+* Bucket sort ???
 * Radix sort ???
-* Insertion sort ???
+* Insertion sort (stable) ???
+* Timsort (Python) ???
 
 ### Applications of sort algorithms
 
@@ -56,6 +58,8 @@
     * for i in 0...len(A)-k:
         * insert A\[k + i] into heap
         * pop min from heap into A\[i]
+* Almost sorted array -> use quick sort with pivot = last or first element
+* Insertion sort for small arrays (<= 10 elements)
 
 ## Type of algorithms
 
@@ -117,6 +121,7 @@
 * How is dict implemented in Python ???
 * Python hash function ???
 * Python hash collision situation ???
+* What sorting does `[].sort` use? (Timsort)
 * How is order preserved in dict in Python ???
 * Is order preserved for set in Python ???
 * How is set implemented in Python ???

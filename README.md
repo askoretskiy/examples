@@ -39,7 +39,7 @@ Execute the module you prefer:
 
 * Recursive binary search:
 
-      python3.9 -m algorithms.recursive_binary_search
+      python3.9 -m algorithms.binary_search_recursive
 
 * Quicksort:
 
