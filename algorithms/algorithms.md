@@ -10,7 +10,7 @@
 * Hash map / hash table
 * Hash set
 * Associative array / dictionary (usually done with Hash map, otherwise with binary search tree)
-* Hash map collision ???
+* Hash map collision
 * Hash set (built on top of hash map)
 * Graph (nodes/vertices + edges)
     * Undirected graph
@@ -22,7 +22,6 @@
     * Complete binary graph (k, 2k + 1, 2k + 2)
 * Max / min binary heap tree
 * Memory heap
-* Heap queue algorithm ???
 * Tree (graph with the root node, each node has subtree)
     * Binary Search Tree
     * Trie ???
@@ -45,10 +44,10 @@
 * Heap sort (unstable)
 * Quicksort (unstable)
 * Merge sort (stable)
-* Bubble sort (stable) ???
+* Bubble sort (stable)
 * Bucket sort ???
 * Radix sort ???
-* Insertion sort (stable) ~~~
+* Insertion sort (stable) ???
 * Timsort (Python) ???
 
 ### Applications of sort algorithms
@@ -61,11 +60,12 @@
 * Almost sorted array -> use quick sort with pivot = last or first element
 * Insertion sort for small arrays (<= 10 elements)
 * We already know the range of target values -> radix sort
+* Already sorted array -> bubble sort: O(N)
 
 ## Type of algorithms
 
-* Bottom-up algorithms ???
-* Top-down algorithms ???
+* Bottom-up algorithms (lego; block -> whole)
+* Top-down algorithms (whole with stubs -> implement -> while with blocks)
 
 
 * Brute force ???
@@ -91,7 +91,8 @@
 * Find connection / distance between graphs
     * Breadth-first from both directions
     * Dijkstra
-    * A* ???
+    * A*
+    * Greedy Best First Search
     * For negative graphs ???
     * For cycle graphs ???
 * Graph search ???
