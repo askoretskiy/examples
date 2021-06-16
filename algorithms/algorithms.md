@@ -5,8 +5,8 @@
 * Array
 * Linked list
 * Stack
-* Queue (single or double-sided) ???
-* Priority queues ???
+* Queue (single or double-sided, FIFO or LIFO; using linked list)
+* Priority queue (using heap tree)
 * Hash map / hash table
 * Hash set
 * Associative array / dictionary (usually done with Hash map, otherwise with binary search tree)
@@ -43,12 +43,12 @@
 ## Sort algorithms
 
 * Heap sort (unstable)
-* Quicksort (unstable) ???
-* Merge sort (stable) ???
+* Quicksort (unstable)
+* Merge sort (stable)
 * Bubble sort (stable) ???
 * Bucket sort ???
 * Radix sort ???
-* Insertion sort (stable) ???
+* Insertion sort (stable) ~~~
 * Timsort (Python) ???
 
 ### Applications of sort algorithms
@@ -60,6 +60,7 @@
         * pop min from heap into A\[i]
 * Almost sorted array -> use quick sort with pivot = last or first element
 * Insertion sort for small arrays (<= 10 elements)
+* We already know the range of target values -> radix sort
 
 ## Type of algorithms
 
