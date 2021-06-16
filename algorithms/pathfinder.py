@@ -4,7 +4,7 @@ import collections
 import heapq
 import math
 import sys
-from typing import Dict, List, Optional, Protocol, Tuple, TypeVar
+from typing import Callable, Dict, List, Optional, Protocol, Tuple, TypeVar
 
 import pytest
 
@@ -88,7 +88,8 @@ def dijkstra_search(
     frontier = PriorityQueue()
     frontier.put(0, start)
     node_parent = {start: None}
-    cost_so_far = {start: 0}
+    cost_so_far = collections.defaultdict(lambda: math.inf)
+    cost_so_far[start] = 0
 
     while frontier:
         node = frontier.pop()
@@ -97,9 +98,38 @@ def dijkstra_search(
 
         for child in graph.neighbors(node):
             new_cost = graph.cost(node, child) + cost_so_far[node]
-            if new_cost < cost_so_far.get(child, math.inf):
+            if new_cost < cost_so_far[child]:
                 cost_so_far[child] = new_cost
                 node_parent[child] = node
+                priority = new_cost
+                frontier.put(priority, child)
+
+    return get_route(start, goal, node_parent)
+
+
+def a_star_search(
+    graph: WeightedGraph,
+    start: Location,
+    goal: Location,
+    heuristic_fn: Callable[[Location, Location], float],
+) -> Optional[List[Location]]:
+    frontier = PriorityQueue()
+    frontier.put(0, start)
+    node_parent = {start: None}
+    cost_so_far = collections.defaultdict(lambda: math.inf)
+    cost_so_far[start] = 0
+
+    while frontier:
+        node = frontier.pop()
+        if node == goal:
+            break
+
+        for child in graph.neighbors(node):
+            new_cost = graph.cost(node, child) + cost_so_far[node]
+            if new_cost < cost_so_far[child]:
+                cost_so_far[child] = new_cost
+                node_parent[child] = node
+                priority = new_cost + heuristic_fn(child, goal)
                 frontier.put(new_cost, child)
 
     return get_route(start, goal, node_parent)
@@ -140,7 +170,7 @@ class TestPathfinder:
         assert breadth_first_search(graph, "A", "E") == ["A", "B", "C", "D", "E"]
         assert breadth_first_search(graph, "F", "A") is None
 
-    def test_two(self, edges):
+    def test_dijkstra(self, edges):
         graph = SimpleWeightedGraph()
         graph.edges = edges
         assert dijkstra_search(graph, "A", "F") == ["A", "B", "C", "F"]
@@ -148,6 +178,26 @@ class TestPathfinder:
         assert dijkstra_search(graph, "A", "F") == ["A", "B", "C", "F"]
         graph.weights = {("C", "F"): 4}
         assert dijkstra_search(graph, "A", "F") == ["A", "B", "C", "D", "E", "F"]
+
+    def test_a_start(self, edges):
+        graph = SimpleWeightedGraph()
+        graph.edges = edges
+
+        def heuristic_fn(node: Location, goal: Location):
+            return abs(ord(node) - ord(goal)) / (ord("F") - ord("A"))
+
+        assert a_star_search(graph, "A", "F", heuristic_fn) == ["A", "B", "C", "F"]
+        graph.weights = {("C", "F"): 3}
+        assert a_star_search(graph, "A", "F", heuristic_fn) == ["A", "B", "C", "F"]
+        graph.weights = {("C", "F"): 4}
+        assert a_star_search(graph, "A", "F", heuristic_fn) == [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+        ]
 
 
 if __name__ == "__main__":
