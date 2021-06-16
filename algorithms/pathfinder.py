@@ -79,7 +79,7 @@ def breadth_first_search(
                 node_parent[child] = node
                 frontier.append(child)
 
-    return get_route(goal, node_parent)
+    return get_route(start, goal, node_parent)
 
 
 def dijkstra_search(
@@ -102,21 +102,22 @@ def dijkstra_search(
                 node_parent[child] = node
                 frontier.put(new_cost, child)
 
-    return get_route(goal, node_parent)
+    return get_route(start, goal, node_parent)
 
 
 def get_route(
-    goal: Location, node_parent: Dict[Location, Optional[Location]]
+    start: Location, goal: Location, node_parent: Dict[Location, Optional[Location]]
 ) -> Optional[List[Location]]:
     if goal not in node_parent:
         return
 
     path_to_child = []
-    parent = goal
-    while parent:
-        path_to_child.append(parent)
-        parent = node_parent[parent]
+    node = goal
+    while node != start:
+        path_to_child.append(node)
+        node = node_parent[node]
 
+    path_to_child.append(start)
     return path_to_child[::-1]
 
 
